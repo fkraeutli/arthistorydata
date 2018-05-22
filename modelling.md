@@ -35,7 +35,7 @@ Possible modelling of the name are:
 
 The main differences between the three is that example 1 treat the appellation not as a literal but as an entity which has a literal. Thus we can express statements about E41 Appellation, such as when it was used, how it come to be, where this form originate and others of such type.
 
-The form chosen by I Tatti is the number 3 (_see the code block_). The reason is very practical. There was no need to express statements about the name itself, and the use of rdfs:label is preferable as a system level (_metaphacts_) in respect to crm:P1_is_identified_by . 
+The form chosen by I Tatti is the number 3 (_see the code block_). The reason is very practical. There was no need to express statements about the name itself, and the use of rdfs:label is preferable as a system level (_metaphacts_) in respect to crm:P1_is_identified_by .
 
 
 ```xml-dtd
@@ -47,7 +47,7 @@ rdfs:label "Giovanni da Udine" .
 
 ## Identifier
 
-A object can has multiple identifiers which we want to link to. An easy example would be Michelangelo, which has an internal identifier, a page on wikidata with his own identifier, as well as another one on ULAN. We can chose to define them and chose a preferred one. 
+A object can has multiple identifiers which we want to link to. An easy example would be Michelangelo, which has an internal identifier, a page on wikidata with his own identifier, as well as another one on ULAN. We can chose to define them and chose a preferred one.
 
 Possible modelling in CRM are:
 
@@ -83,7 +83,7 @@ crm:P80_end_is_qualified_by  "1700"^^xsd:gYear .
 
 ## Place
 
-Place is another important feature we should harmonise. Diverse are the possibilities, both inside and outside CRM. The latter offers an extension called CRMGeo that harmonise CRM with GeoSparql and offer a nice representation of the geographical features with a rich semantics. However the adoption is limited and the learning curve is steep. Other option are offered in CRM, which allow the expression of simple statements about place. 
+Place is another important feature we should harmonise. Diverse are the possibilities, both inside and outside CRM. The latter offers an extension called CRMGeo that harmonise CRM with GeoSparql and offer a nice representation of the geographical features with a rich semantics. However the adoption is limited and the learning curve is steep. Other option are offered in CRM, which allow the expression of simple statements about place.
 
 The identified mapping options are:
 
@@ -136,7 +136,7 @@ The solution is complex and require the use of type for something which should b
 
 3. **E53 Place→ P87 is identified by → wgs:Point→ wgs:lat →  rdfs:Literal**
 
-This mapping takes in account the declaration, at an ontology level, that wgs:Point, an entity in the ontology Geo, is a subclass of E47 Spatial Coordinates. 
+This mapping takes in account the declaration, at an ontology level, that wgs:Point, an entity in the ontology Geo, is a subclass of E47 Spatial Coordinates.
 
 ```xml-dtd
 https://collection.itatti.harvard.edu/resource/ex/place/ a crm:E53_Place ;
@@ -202,7 +202,7 @@ The components are modelled as follows:
 	crm:R7_is_example_of <http://example.org/book/manifestation> .
 
 <http://example.org/book/publication> a frbroo:F24_Publication_Expression ;
-	crm:P165_incorporates <http://example.org/book/expression> . 
+	crm:P165_incorporates <http://example.org/book/expression> .
 
 <http://example.org/book/expression> a frbroo:F22_Self-Contained_Expression .
 
@@ -229,10 +229,10 @@ The author is then represented as the actor carrying out the event
 
 <http://example.org/book/expression> a frbroo:F22_Self-Contained_Expression ;
 	frbroo:R17i_was_created_by <http://example.org/book/expression/event> .
-	
+
 <http://example.org/book/expression/event> a frbroo:F28_Expression_Creation ;
 	crm:P14_carried_out_by <http://example.org/actor> .
-	
+
 <http://example.org/actor> a crm:E39_Actor .
 ```
 
@@ -248,22 +248,73 @@ The typed property PC14 carried out by is used when we need to represent additio
 
 <http://example.org/book/expression> a frbroo:F22_Self-Contained_Expression ;
 	frbroo:R17i_was_created_by <http://example.org/book/expression/event> .
-	
+
 <http://example.org/book/expression/event> a frbroo:F28_Expression_Creation ;
 	crm:P01_is_domain_of <http://example.org/book/author/1> .
-	
+
 <http://example.org/book/author/1> a crm:PC14_carried_out_by ;
 	crm:P02_has_range <http://example.org/actor> ;
 	crm:P14.1_in_the_role_of <http://example.org/type/author>
-	
+
 <http://example.org/actor> a crm:E39_Actor .
 
 <http://example.org/type/author> a crm:E55_Type .
 ```
+
+### Publisher
+
+As publisher we understand the actor(s) responsible for the creation of a F24 Publication Expression. A publisher may be the same as the printer, in which case they are also the actor responsible for carrying out the F32 Carrier Production Event.
+
+We model the creation of the F24 Publication Expression as follows:
+
+1. **F24 Publication Expression → R24i was created through → F30 Publication Event**
+
+The publisher is then represented as the actor carrying out the event
+
+1. **F30 Publication Event  → P14 carried out by → E39 Actor**
+
+
+```ttl
+@prefix frbroo: <http://iflastandards.info/ns/fr/frbr/frbroo/>.
+@prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>.
+
+<http://example.org/book/publication> a frbroo:F24_Publication_Expression ;
+    frbroo:R24i_was_created_through <http://example.org/book/publication/event> .
+
+<http://example.org/book/publication/event> a frbroo:F30_Publication_Event ;
+    crm:P14_carried_out_by <http://example.org/actor> .
+
+<http://example.org/actor> a crm:E39_Actor .
+```
+
+### Date published
+The publishing date is the date the F30 Publication has been carried out.
+
+It is modelled as follows:
+
+1. **F30 Publication Event → P4 has time-span  → E52 Time-Span**
+
+See the section on Time for more detail on how to model time spans. In bibliographic data we typically have a year, which we model using the **P82a** and **P82b** properties. For readability, we also include the year as a rdfs:label to the E52 Time-Span.
+
+See the following example:
+
+```ttl
+@prefix frbroo: <http://iflastandards.info/ns/fr/frbr/frbroo/>.
+@prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>.
+
+<http://example.org/book/publication/event> a frbroo:F30_Publication_Event ;
+    crm:P4_has_time-span <http://example.org/book/publication/date> .
+
+<http://example.org/book/publication/date> a crm:E52_Time-Span ;
+	rdfs:label "1980" ;
+	crm:P82a_begin_of_the_beginning "1980-01-01"^^xsd:date;
+ 	crm:P82b_end_of_the_end  "1980-12-31"^^xsd:date .
+```
+
 
 
 [^1]: Not recognised officialy by W3C, Geo becomes a *standard de facto* for geographical data. However it is not as complex or precise as GEOSparql or CRMGeo
 
 [^2]: See the case of historical place vs actual places.
 
-[^3]: We occasionally prefer to note the inverse CIDOC properties, denoted by _i_, when there is an identifiable 'central' entity. 
+[^3]: We occasionally prefer to note the inverse CIDOC properties, denoted by _i_, when there is an identifiable 'central' entity.
